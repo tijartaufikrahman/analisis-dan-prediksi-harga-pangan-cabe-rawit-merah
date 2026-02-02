@@ -18,3 +18,29 @@ python app.py
 # Untuk Hosting REnder
 pip freeze > requirements.txt
 
+
+
+
+
+
+
+# INI di AMAZON
+cd ~/flaskapp/analisis-dan-prediksi-harga-pangan-cabe-rawit-merah
+source venv/bin/activate
+gunicorn --bind 127.0.0.1:8000 app:app
+
+
+- Liat
+http://ec2-3-88-28-19.compute-1.amazonaws.com
+Atau
+http://3.88.28.19
+
+
+
+- kalo pull
+cd ~/flaskapp/analisis-dan-prediksi-harga-pangan-cabe-rawit-merah
+git pull
+source venv/bin/activate
+pip install -r requirements.txt  # kalau ada dependency baru
+sudo systemctl restart nginx     # kalau pakai systemd nanti
+

@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% block title %}Sistem Prediksi Harga{% endblock %}
+{% block title %}Split + STL{% endblock %}
 
 {% block content %}
 
@@ -10,10 +10,7 @@
 .page-hero {
     background: linear-gradient(135deg, #0093AD, #006F84);
     color: white;
-    /* padding: 60px 20px; */
-    padding-top: 60px;
-    padding-bottom: 90px;
-
+    padding: 70px 30px;
     border-radius: 0 0 40px 40px;
 }
 
@@ -87,7 +84,7 @@
 
 .accordion-item {
     border: none;
-    border-radius: 10px !important;
+    border-radius: 16px !important;
     overflow: hidden;
     box-shadow: 0 6px 20px rgba(0,0,0,0.06);
     margin-bottom: 20px;
@@ -118,6 +115,62 @@
 
 /* ================= ACCORDION PRO STYLE ================= */
 
+.accordion-item {
+    border: none;
+    border-radius: 18px !important;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+    margin-bottom: 25px;
+}
+
+.accordion-button {
+    font-weight: 600;
+    font-size: 15px;
+    padding: 20px 24px;
+    background: #ffffff;
+    transition: all 0.3s ease;
+}
+
+.accordion-button:not(.collapsed) {
+    background: linear-gradient(135deg, #0093AD, #007A8C);
+    color: #ffffff;
+}
+
+.accordion-button:focus {
+    box-shadow: none;
+}
+
+.accordion-body {
+    background: #f8fbfc;
+    padding: 30px;
+}
+
+/* ================= METRIC CARD ================= */
+
+.metric-card {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 18px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: 0.3s ease;
+}
+
+.metric-card:hover {
+    transform: translateY(-3px);
+}
+
+.metric-title {
+    font-size: 12px;
+    color: #6c757d;
+    margin-bottom: 5px;
+}
+
+.metric-value {
+    font-size: 22px;
+    font-weight: 600;
+    color: #0093AD;
+}
+
 
 
 </style>
@@ -126,15 +179,10 @@
 <div class="page-hero text-center">
     <h2>Sistem Prediksi Harga Cabe Rawit Merah</h2>
     <p>
-        <!-- Sistem ini digunakan untuk menganalisis dan memprediksi 
+        Sistem ini digunakan untuk menganalisis dan memprediksi 
         <span class="highlight-text">harga Cabe Rawit Merah di Kota Bandung</span> 
         menggunakan metode STL dan SARIMA untuk memperoleh model terbaik 
-        serta menghasilkan prediksi harga yang akurat dan stabil. -->
-
-        Sistem ini digunakan untuk menghasilkan prediksi harga 
-<span class="highlight-text">Cabe Rawit Merah</span> 
-di Kota Bandung berdasarkan data historis guna memperoleh estimasi harga periode selanjutnya.
-
+        serta menghasilkan prediksi harga yang akurat dan stabil.
     </p>
 </div>
 
@@ -148,14 +196,14 @@ di Kota Bandung berdasarkan data historis guna memperoleh estimasi harga periode
                 <div class="card-body p-4">
 
                     <h5 class="mb-4 fw-semibold">
-                        Mulai Proses
+                        Mulai Proses Analisis
                     </h5>
 
                     <!-- STEP INFO -->
                     <!-- STEP INFO -->
-                    <div class="row mb-3 g-3">
+                    <div class="row mb-4 g-3">
                         <div class="col-md-4">
-                            <div class="step-box fs-7">
+                            <div class="step-box">
                                 1️⃣ Pilih Dataset
                                 <div class="small text-muted mt-1">
                                     Data historis harga 
@@ -164,7 +212,7 @@ di Kota Bandung berdasarkan data historis guna memperoleh estimasi harga periode
                         </div>
 
                         <div class="col-md-4">
-                            <div class="step-box fs-7">
+                            <div class="step-box">
                                 2️⃣ Detail Performa Model
                                 <div class="small text-muted mt-1">
                                     Spesifikasi parameter serta hasil pengujian akurasi model
@@ -173,7 +221,7 @@ di Kota Bandung berdasarkan data historis guna memperoleh estimasi harga periode
                         </div>
 
                         <div class="col-md-4">
-                            <div class="step-box fs-7">
+                            <div class="step-box">
                                 3️⃣ Prediksi Harga
                                 <div class="small text-muted mt-1">
                                     Prediksi harga untuk periode selanjutnya
@@ -197,7 +245,7 @@ di Kota Bandung berdasarkan data historis guna memperoleh estimasi harga periode
                         <div class="col-md-4">
                             <button id="btnSplit" 
                                     class="btn btn-main text-white w-100">
-                                Jalankan
+                                Jalankan Analisis
                             </button>
                         </div>
 
@@ -996,25 +1044,29 @@ let summaryHtml = `
             </button>
         </h2>
 
+        
+
         <div id="collapseKesimpulan"
              class="accordion-collapse collapse show">
             <div class="accordion-body">
 
+
                 <div class="row mt-1 mx-1 py-3" style="background-color:#fbfbfb;">
-                    
-                    <!-- LEFT SIDE -->
-                    <div class="col-12 col-lg-6">
+                    <div class="col-12 col-lg-6 ">
 
                         <div class="card border-0 shadow-none rounded-1"
                             style="border-radius:10px;">
+
                             <div class="card-body" style="background-color:#fbfbfb;">
 
-                                <h5 class="mb-4" style="font-weight:600;">
+                                <h5 class=" mb-4"
+                                    style="font-weight:600;">
                                     Parameter Model SARIMA Terpilih
                                 </h5>
 
                                 <div class="row text-center g-3">
 
+                                    <!-- Order -->
                                     <div class="col-6">
                                         <div class="p-3 shadow-sm"
                                             style="background:#fff; border-radius:10px;">
@@ -1027,6 +1079,7 @@ let summaryHtml = `
                                         </div>
                                     </div>
 
+                                    <!-- Seasonal -->
                                     <div class="col-6">
                                         <div class="p-3 shadow-sm"
                                             style="background:#fff; border-radius:10px;">
@@ -1041,11 +1094,12 @@ let summaryHtml = `
 
                                 </div>
 
-                                <div class="mt-4"
-                                    style="font-size:18px; color:#6c757d;">
-                                    Model:
-                                    <span style="font-weight:   ; color:#00849B;">
-                                        SARIMA (${bestTrainModel.order.join(",")})
+                                <!-- Ringkas format model -->
+                                <div class="mt-4 "
+                                    style="font-size:16px; color:#6c757d;">
+                                    Model: 
+                                    <span style="font-weight:500; color:#000;">
+                                        SARIMA (${bestTrainModel.order.join(",")}) 
                                         (${bestTrainModel.seasonal.join(",")})
                                     </span>
                                 </div>
@@ -1055,266 +1109,279 @@ let summaryHtml = `
 
                     </div>
 
-                    <!-- RIGHT SIDE -->
                     <div class="col-12 col-lg-6">
-                        <div class="card border-0 shadow-none rounded-1"
-                            style="border-radius:16px;">
-                            <div class="card-body" style="background-color:#fbfbfb;">
+    <div class="card border-0 shadow-none rounded-1" style="border-radius:16px;">
+        <div class="card-body" style="background-color:#fbfbfb;">
 
-                                <h5 class="mb-4" style="font-weight:600;">
-                                    Hasil Pengujian Model
-                                </h5>
+            <h5 class="mb-4" style="font-weight:600;">
+                Hasil Pengujian Model
+            </h5>
 
-                                <div class="row g-3">
+            <div class="row g-3">
 
-                                <!-- MAPE -->
-                                <div class="col-12">
-                                    <div class="row g-2">
+                <!-- MAPE -->
+                <div class="col-12">
+                    <div class="row g-2">
 
-                                        <div class="col-4">
-                                            <div class="p-3 h-100 shadow-sm"
-                                                style="background:#fff; border-radius:12px; ">
-                                                <div style="font-size:12px; color:#6c757d;">MAPE</div>
-                                                <div style="font-size:22px; font-weight:600;">
-                                                    ${bestTrainModel.MAPE}%
-                                                </div>
-                                                <div style="font-size:11px; color:#999;">
-                                                    Mean Absolute Percentage Error
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-8">
-                                            <div class="p-3 h-100 shadow-sm"
-                                                style="background:#fff; border-radius:12px;">
-                                                
-                                                <div style="font-size:13px; font-weight:500; margin-bottom:6px;">
-                                                    Interpretasi Kesalahan Prediksi
-                                                </div>
-
-                                                <div style="font-size:13px; line-height:1.6;">
-                                                    ≤ 10%  → Sangat Baik <br>
-                                                    10% – 20% → Baik <br>
-                                                    > 20%  → Perlu Evaluasi
-                                                </div>
-
-                                            </div>
-                                        </div>
-
-                                    </div>
+                        <div class="col-4">
+                            <div class="p-3 h-100 shadow-sm"
+                                style="background:#fff; border-radius:12px; ">
+                                <div style="font-size:12px; color:#6c757d;">MAPE</div>
+                                <div style="font-size:22px; font-weight:600;">
+                                    ${bestTrainModel.MAPE}%
                                 </div>
-
-
-                                <!-- MSE -->
-                                <div class="col-12 d-none">
-                                    <div class="row g-2">
-
-                                        <div class="col-4">
-                                            <div class="p-3 h-100 shadow-sm"
-                                                style="background:#fff; border-radius:12px; ">
-                                                <div style="font-size:12px; color:#6c757d;">MSE</div>
-                                                <div style="font-size:20px; font-weight:600;">
-                                                    ${bestTrainModel.MSE}
-                                                </div>
-                                                <div style="font-size:11px; color:#999;">
-                                                    Mean Squared Error
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-8">
-                                            <div class="p-3 h-100 shadow-sm"
-                                                style="background:#fff; border-radius:12px;">
-                                                <div style="font-size:13px; line-height:1.6;">
-                                                    Mengukur besar kesalahan model dalam bentuk kuadrat. <br>
-                                                    Semakin kecil nilainya → performa model semakin baik.
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </div>
+                                <div style="font-size:11px; color:#999;">
+                                    Mean Absolute Percentage Error
                                 </div>
-
-
-                                <!-- RMSE -->
-                                <div class="col-12">
-                                    <div class="row g-2">
-
-                                        <div class="col-4">
-                                            <div class="p-3 h-100 shadow-sm"
-                                                style="background:#fff; border-radius:12px; ">
-                                                <div style="font-size:12px; color:#6c757d;">RMSE</div>
-                                                <div style="font-size:20px; font-weight:600;">
-                                                    ${bestTrainModel.RMSE}
-                                                </div>
-                                                <div style="font-size:11px; color:#999;">
-                                                    Root Mean Squared Error
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-8">
-                                            <div class="p-3 h-100 shadow-sm"
-                                                style="background:#fff; border-radius:12px;">
-                                                <div style="font-size:13px; line-height:1.6;">
-                                                    Rata-rata selisih prediksi terhadap nilai aktual sekitar <br>
-                                                    <strong>Rp ${bestTrainModel.RMSE}</strong><br>
-                                                    Semakin kecil → prediksi semakin mendekati data asli.
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-
-
-                                <!-- WHITE NOISE -->
-                                <div class="col-12">
-                                    <div class="row g-2">
-
-                                        <div class="col-4">
-                                            <div class="p-3 h-100 shadow-sm"
-                                                style="background:#fff; border-radius:12px; ">
-                                                <div style="font-size:12px; color:#6c757d;">White Noise</div>
-                                                <div style="font-size:20px; font-weight:600;">
-                                                    ${bestTrainModel.white_noise 
-                                                        ? bestTrainModel.white_noise.toFixed(4) 
-                                                        : "-"}
-                                                </div>
-                                                <div style="font-size:11px; color:#999;">
-                                                    Uji Ljung-Box (p-value)
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-8">
-                                            <div class="p-3 h-100 shadow-sm"
-                                                style="background:#fff; border-radius:12px;">
-                                                                            
-
-                                                <div style="font-size:13px; line-height:1.7; color:#495057;">
-                                                    Nilai apakah model masih menyisakan pola kesalahan.
-                                                    <br>
-                                                    • Jika nilai di atas 0.05 → model sudah stabil dan layak digunakan.
-                                                    <br>
-                                                    • Jika nilai 0.05 atau kurang → model masih perlu perbaikan.
-                                                </div>
-
-                                            </div>
-                                        </div>
-
-
-                                    </div>
-                                </div>
-
                             </div>
+                        </div>
+
+                        <div class="col-8">
+                            <div class="p-3 h-100 shadow-sm"
+                                style="background:#fff; border-radius:12px;">
+                                
+                                <div style="font-size:13px; font-weight:500; margin-bottom:6px;">
+                                    Interpretasi Kesalahan Prediksi
+                                </div>
+
+                                <div style="font-size:13px; line-height:1.6;">
+                                    ≤ 10%  → Sangat Baik <br>
+                                    10% – 20% → Baik <br>
+                                    > 20%  → Perlu Evaluasi
+                                </div>
 
                             </div>
                         </div>
-                    </div>
 
+                    </div>
                 </div>
 
-                <!-- TRAIN SECTION -->
-                <div class="row mb-5 mt-3 px-4">
-                    <div class="col-md-8">
-                        <h5 class="mt-3">Grafik Model Train vs Aktual</h5>
-                        <canvas id="best-train-chart"></canvas>
-                    </div>
 
-                    <div class="col-md-4">
-                        <h5 class="mt-5">Table Harga (Model Train vs Aktual)</h5>
-                        <table class="table mt-3">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Periode</th>
-                                    <th>Aktual</th>
-                                    <th>Forecast</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${lastTestData.map((val,idx)=>{
-                                    const fc = bestTrainModel.forecast[idx] ?? null;
-                                    return `
-                                    <tr>
-                                        <td>${lastTestLabels[idx]}</td>
-                                        <td>${formatRupiah(val)}</td>
-                                        <td>${fc !== null ? formatRupiah(fc) : "-"}</td>
-                                    </tr>`;
-                                }).join("")}
-                            </tbody>
-                        </table>
+                <!-- MSE -->
+                <div class="col-12 d-none">
+                    <div class="row g-2">
+
+                        <div class="col-4">
+                            <div class="p-3 h-100 shadow-sm"
+                                style="background:#fff; border-radius:12px; ">
+                                <div style="font-size:12px; color:#6c757d;">MSE</div>
+                                <div style="font-size:20px; font-weight:600;">
+                                    ${bestTrainModel.MSE}
+                                </div>
+                                <div style="font-size:11px; color:#999;">
+                                    Mean Squared Error
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-8">
+                            <div class="p-3 h-100 shadow-sm"
+                                style="background:#fff; border-radius:12px;">
+                                <div style="font-size:13px; line-height:1.6;">
+                                    Mengukur besar kesalahan model dalam bentuk kuadrat. <br>
+                                    Semakin kecil nilainya → performa model semakin baik.
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <!-- RMSE -->
+                <div class="col-12">
+                    <div class="row g-2">
+
+                        <div class="col-4">
+                            <div class="p-3 h-100 shadow-sm"
+                                style="background:#fff; border-radius:12px; ">
+                                <div style="font-size:12px; color:#6c757d;">RMSE</div>
+                                <div style="font-size:20px; font-weight:600;">
+                                    ${bestTrainModel.RMSE}
+                                </div>
+                                <div style="font-size:11px; color:#999;">
+                                    Root Mean Squared Error
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-8">
+                            <div class="p-3 h-100 shadow-sm"
+                                style="background:#fff; border-radius:12px;">
+                                <div style="font-size:13px; line-height:1.6;">
+                                    Rata-rata selisih prediksi terhadap nilai aktual sekitar <br>
+                                    <strong>Rp ${bestTrainModel.RMSE}</strong><br>
+                                    Semakin kecil → prediksi semakin mendekati data asli.
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <!-- WHITE NOISE -->
+                <div class="col-12">
+                    <div class="row g-2">
+
+                        <div class="col-4">
+                            <div class="p-3 h-100 shadow-sm"
+                                style="background:#fff; border-radius:12px; ">
+                                <div style="font-size:12px; color:#6c757d;">White Noise</div>
+                                <div style="font-size:20px; font-weight:600;">
+                                    ${bestTrainModel.white_noise 
+                                        ? bestTrainModel.white_noise.toFixed(4) 
+                                        : "-"}
+                                </div>
+                                <div style="font-size:11px; color:#999;">
+                                    Uji Ljung-Box (p-value)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-8">
+                            <div class="p-3 h-100 shadow-sm"
+                                style="background:#fff; border-radius:12px;">
+                                                            
+
+                                <div style="font-size:13px; line-height:1.7; color:#495057;">
+                                    Nilai apakah model masih menyisakan pola kesalahan.
+                                    <br>
+                                    • Jika nilai di atas 0.05 → model sudah stabil dan layak digunakan.
+                                    <br>
+                                    • Jika nilai 0.05 atau kurang → model masih perlu perbaikan.
+                                </div>
+
+                            </div>
+                        </div>
+
+
                     </div>
                 </div>
 
             </div>
+
         </div>
     </div>
+</div>
+
+                </div>
+
+                
+                
+
+                        
+
+                        
+`;
+
+// RMSE Pred : ${bestForwardModel.RMSE_PRED}
+
+/* ===== TRAIN VS AKTUAL ===== */
+
+summaryHtml += `
+
+
+<div class="row mb-5 mt-3 px-4">
+
+    
+    <div class="col-md-8">
+        <div class="row">
+            <div class="col-12">
+                <h5 class="mt-3">Grafik Model Train vs Aktual</h5>
+            </div>    
+            <div class="col-12">
+                <canvas id="best-train-chart"></canvas>
+            </div>    
+        </div>
+        
+    </div>
+
+    <div class="col-md-4">
+        <h5 class="mt-5">Table Model Train vs Aktual</h5>
+        <table class="table mt-3">
+            <thead class="table-light">
+                <tr>
+                    <th>Periode</th>
+                    <th>Aktual (Test)</th>
+                    <th>Forecast (Model Train)</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${lastTestData.map((val,idx)=>{
+                    const fc = bestTrainModel 
+                        ? bestTrainModel.forecast[idx] 
+                        : null;
+                    return `
+                    <tr>
+                        <td>${lastTestLabels[idx]}</td>
+                        <td>${formatRupiah(val)}</td>
+                        <td>${fc !== null ? formatRupiah(fc) : "-"}</td>
+                    </tr>`;
+                }).join("")}
+            </tbody>
+        </table>
+    </div>
+
 </div>
 `;
 
-/* ================= ACCORDION PREDIKSI ================= */
+/* ===== FORWARD ===== */
 
 summaryHtml += `
-<div class="accordion my-4" id="accordionPrediksi">
-    <div class="accordion-item">
-        <h2 class="accordion-header">
-            <button class="accordion-button "
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#collapsePrediksi">
-                PREDIKSI HARGA
-            </button>
-        </h2>
+<hr>
+<div class="row mb-4 px-4">
 
-        <div id="collapsePrediksi"
-             class="accordion-collapse collapse show">
-            <div class="accordion-body">
+    <h4 class="mt-2 mb-2">PREDIKSI HARGA</h4>
 
-                <div class="row mb-4 px-2">
+    <div class="col-md-6">
+        <h5 class="mt-3">Grafik Prediksi Harga</h5>
+        
 
-                    <div class="col-md-6">
-                        <h5 class="mt-3">Grafik Prediksi Harga</h5>
-                        <div style="position:relative; height:350px;">
-                            <canvas id="best-forward-chart"></canvas>
-                        </div>
-                    </div>
+        <div style="position:relative; height:350px;">
+            <canvas id="best-forward-chart"></canvas>
+        </div>
+    </div>
 
-                    <div class="col-md-6">
-                        <h5 class="mt-4 mb-4">Table Prediksi Harga</h5>
-                        <table class="table">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Periode</th>
-                                    <th>Aktual</th>
-                                    <th>Forecast</th>
-                                    <th>Error</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${actualPred.map((val,idx)=>{
-                                    const fc = bestForwardModel.forecast[idx] ?? null;
-                                    return `
-                                    <tr>
-                                        <td>${lastPredLabels[idx]}</td>
-                                        <td>${formatRupiah(val)}</td>
-                                        <td>${fc !== null ? formatRupiah(fc) : "-"}</td>
-                                        <td>${fc !== null ? formatRupiah(val - fc) : "-"}</td>
-                                    </tr>`;
-                                }).join("")}
-                            </tbody>
-                        </table>
-                    </div>
+    <div class="col-md-6">
+        <h5 class="mt-4 mb-4">Table Prediksi Harga</h5>
+        <table class="table  ">
+            <thead class="table-light">
+                <tr>
+                    <th>Periode</th>
+                    <th>Aktual</th>
+                    <th>Forecast</th>
+                    <th>Error</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${actualPred.map((val,idx)=>{
+                    const fc = bestForwardModel.forecast[idx] ?? null;
+                    return `
+                    <tr>
+                        <td>${lastPredLabels[idx]}</td>
+                        <td>${formatRupiah(val)}</td>
+                        <td>${fc !== null ? formatRupiah(fc) : "-"}</td>
+                        <td>${fc !== null ? formatRupiah(val - fc) : "-"}</td>
+                    </tr>`;
+                }).join("")}
+            </tbody>
+        </table>
+    </div>
 
-                </div>
+</div>
+`;
 
+summaryHtml += `
             </div>
         </div>
     </div>
 </div>
+
 `;
 
 $("#hasilForwardPred").append(summaryHtml);
+
 
 /* ===== DRAW CHART TRAIN ===== */
 
