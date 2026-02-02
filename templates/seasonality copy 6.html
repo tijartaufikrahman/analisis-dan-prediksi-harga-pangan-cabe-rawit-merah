@@ -122,46 +122,6 @@
 
 </style>
 
-
-<style>
-.modal-backdrop {
-    background-color: rgba(237, 234, 234, 0.5) !important;
-}
-
-.modal-backdrop.show {
-    opacity: 1 !important;
-}
- */
-
-</style>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- HERO SECTION -->
 <div class="page-hero text-center">
     <h2>Sistem Prediksi Harga Cabe Rawit Merah</h2>
@@ -188,7 +148,7 @@ di Kota Bandung berdasarkan data historis guna memperoleh estimasi harga periode
                 <div class="card-body p-4">
 
                     <h5 class="mb-4 fw-semibold">
-                        Alur Sistem
+                        Mulai Proses
                     </h5>
 
                     <!-- STEP INFO -->
@@ -205,7 +165,7 @@ di Kota Bandung berdasarkan data historis guna memperoleh estimasi harga periode
 
                         <div class="col-md-4">
                             <div class="step-box fs-7">
-                                2️⃣ Detail Kinerja Model
+                                2️⃣ Detail Performa Model
                                 <div class="small text-muted mt-1">
                                     Spesifikasi parameter serta hasil pengujian akurasi model
                                 </div>
@@ -329,7 +289,7 @@ di Kota Bandung berdasarkan data historis guna memperoleh estimasi harga periode
         Jalankan Prediksi Harga
     </button>
 
-    <div  id="hasilForwardPred" class="mt-4"></div>
+    <div id="hasilForwardPred" class="mt-4"></div>
 
 </div>
 
@@ -360,51 +320,10 @@ di Kota Bandung berdasarkan data historis guna memperoleh estimasi harga periode
 </div>
 
 
-<!-- Baru -->
-
-
-<div id="hasilDynamicForward"></div>
-<!-- EndBaru -->
-
-
-
-<!-- Modal -->
-<div class="modal fade " id="modalPrediksi" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered ">
-        <div class="modal-content border-0 ">
-            <div class="modal-header">
-                <h5 class="modal-title">Tambahkan Periode Prediksi</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body  ">
-                <label class="form-label">Jumlah Periode Tambahan</label>
-                <input type="number" id="inputExtraStep" class="form-control" min="0" value="0">
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary"
-                        data-bs-dismiss="modal">
-                    Batal
-                </button>
-                <button class="btn text-white"
-                        onclick="runDynamicForward()"
-                        style="background-color: #0093AD;">
-                    Prediksi
-                </button>
-            </div>
-
-        </div>
-    </div>
-</div>
-
-
-
-
 {% endblock %}
 
 {% block scripts %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
-
 
 <script>
 let lastTestData = [];
@@ -610,8 +529,6 @@ function runSarimaGrid() {
 
 
             if(filteredModels.length === 0){
-                $("#btnSplit").prop("disabled", false).text("Submit");
-                hideLoader();
                 $("#hasilSarima").html(
                     `<div class="alert alert-warning">
                         Tidak ada model dengan MAPE ≤ 10%
@@ -800,7 +717,6 @@ function runSarimaGrid() {
                 );
             });
             btnForwardPred();
-            runDynamicForward();
 
         },
         error: function(){
@@ -1076,7 +992,7 @@ let summaryHtml = `
                 type="button"
                 data-bs-toggle="collapse"
                 data-bs-target="#collapseKesimpulan">
-                Detail Kinerja Model
+                Detail dan Performa Model
             </button>
         </h2>
 
@@ -1340,7 +1256,7 @@ let summaryHtml = `
 /* ================= ACCORDION PREDIKSI ================= */
 
 summaryHtml += `
-<div class="accordion my-4 d-none" id="accordionPrediksi">
+<div class="accordion my-4" id="accordionPrediksi">
     <div class="accordion-item">
         <h2 class="accordion-header">
             <button class="accordion-button "
@@ -1505,196 +1421,6 @@ new Chart(
 
 function hideLoader(){
     $("#globalLoader").addClass("d-none");
-}
-
-</script>
-
-
-
-
-<script>
-    function runDynamicForward(){
-
-    if(lastFilteredModels.length === 0){
-        alert("Jalankan SARIMA Grid dulu");
-        return;
-    }
-
-    const extraStep = Number($("#inputExtraStep").val());
-
-    $.ajax({
-        url: "/sarima-forward-dynamic",
-        type: "POST",
-        contentType: "application/json",
-        data: JSON.stringify({
-            model: lastFilteredModels[0],
-            extra_step: extraStep
-        }),
-        success: function(res){
-
-            $("#btnSplit").prop("disabled", false).text("Submit");
-            hideLoader();
-
-            if(!res.success){
-                $("#hasilDynamicForward").html(
-                    `<div class="alert alert-danger">${res.message}</div>`
-                );
-                return;
-            }
-
-            let forecast = res.forecast;
-            let actual = res.actual;
-
-            // ===== EXTEND ACTUAL =====
-            let actualExtended = [...actual];
-            while(actualExtended.length < forecast.length){
-                actualExtended.push(null);
-            }
-
-            // ===== EXTEND LABEL =====
-            let labels = [...lastPredLabels];
-
-            if(forecast.length > labels.length){
-
-                let lastDate = moment(labels[labels.length - 1], "MM/YYYY");
-
-                for(let i = labels.length; i < forecast.length; i++){
-                    lastDate = lastDate.add(1, "month");
-                    labels.push(lastDate.format("MM/YYYY"));
-                }
-            }
-
-            // ===== BUILD TABLE ROW =====
-            let tableRows = "";
-
-            labels.forEach((label, idx)=>{
-
-                let actualVal = actualExtended[idx];
-                let forecastVal = forecast[idx];
-
-                tableRows += `
-                    <tr>
-                        <td>${label}</td>
-                        <td>${actualVal !== null ? formatRupiah(actualVal) : "-"}</td>
-                        <td>${forecastVal !== undefined ? formatRupiah(forecastVal) : "-"}</td>
-                        <td>
-                            ${(actualVal !== null && forecastVal !== undefined)
-                                ? formatRupiah(actualVal - forecastVal)
-                                : "-"}
-                        </td>
-                    </tr>
-                `;
-            });
-
-            // ===== RENDER ACCORDION =====
-            $("#hasilDynamicForward").html(`
-
-                <div class="accordion mb-4 mt-5 mx-3" id="accordionDynamicPrediksi">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button"
-                                type="button"
-                                data-bs-toggle="collapse"
-                                data-bs-target="#collapseDynamicPrediksi">
-                                PREDIKSI HARGA
-                            </button>
-                        </h2>
-
-
-                        <div id="collapseDynamicPrediksi"
-                             class="accordion-collapse collapse show">
-                            <div class="accordion-body">
-
-                                <div class="row mb-4 px-3">
-
-                                    <div class="col-md-6">
-                                        <h5 class="mt-3">Grafik Prediksi</h5>
-                                        <div style="position:relative; height:350px;">
-                                            <canvas id="dynamicChart"></canvas>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">                                                                                
-                                        <div class="d-flex justify-content-between">
-                                            <h5 class="mt-4 mb-4">Table Prediksi </h5>
-                                            <div class="text-end mt-2">
-                                                <button class="btn "
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#modalPrediksi"
-                                                        title="Tambah Prediksi"
-                                                        style="background-color: #0093AD;color: #fff;">
-
-                                                    <i class="bi bi-graph-up-arrow"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-
-                                        <table class="table">
-                                            <thead class="table-light">
-                                                <tr>
-                                                    <th>Periode</th>
-                                                    <th>Aktual</th>
-                                                    <th>Forecast</th>
-                                                    <th>Error</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                ${tableRows}
-                                            </tbody>
-                                        </table>
-                                    </div>
-
-                                </div>
-
-                                <div class="px-3 d-none">
-                                    <strong>MAPE:</strong> ${res.MAPE}% &nbsp; | &nbsp;
-                                    <strong>RMSE:</strong> ${res.RMSE}
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `);
-
-            // ===== DESTROY CHART LAMA =====
-            let oldChart = Chart.getChart("dynamicChart");
-            if(oldChart){
-                oldChart.destroy();
-            }
-
-            // ===== DRAW CHART =====
-            new Chart(
-                document.getElementById("dynamicChart"),
-                {
-                    type:"line",
-                    data:{
-                        labels: labels,
-                        datasets:[
-                            {
-                                label:"Aktual",
-                                data: actualExtended,
-                                borderDash:[5,5]
-                            },
-                            {
-                                label:"Forecast",
-                                data: forecast
-                            }
-                        ]
-                    },
-                    options:{
-                        responsive:true,
-                        animation:false
-                    }
-                }
-            );
-
-        },
-        error(){
-            $("#btnSplit").prop("disabled", false).text("Submit");
-            hideLoader();
-        }
-    });
 }
 
 </script>

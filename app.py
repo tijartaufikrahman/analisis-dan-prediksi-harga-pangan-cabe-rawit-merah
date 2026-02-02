@@ -821,7 +821,97 @@ def plot_acf_pacf():
             "message": str(e)
         })
 
+
+
+# Prediksi BAru
+@app.route("/sarima-forward-dynamic", methods=["POST"])
+def sarima_forward_dynamic():
+
+    global GLOBAL_TRAIN, GLOBAL_TEST, GLOBAL_PRED
+
+    if GLOBAL_TRAIN is None or GLOBAL_TEST is None or GLOBAL_PRED is None:
+        return jsonify({
+            "success": False,
+            "message": "Split data dulu"
+        })
+
+    data = request.json
+    model = data.get("model")
+    extra_step = int(data.get("extra_step", 0))
+
+    if not model:
+        return jsonify({
+            "success": False,
+            "message": "Model tidak ditemukan"
+        })
+
+    train = GLOBAL_TRAIN["harga"].values.astype(float)
+    test = GLOBAL_TEST["harga"].values.astype(float)
+    pred_actual = GLOBAL_PRED["harga"].values.astype(float)
+
+    full_data = np.concatenate([train, test])
+
+    p, d, q = model["order"]
+    P, D, Q, s = model["seasonal"]
+
+    try:
+        model_sarima = SARIMAX(
+            full_data,
+            order=(p, d, q),
+            seasonal_order=(P, D, Q, s),
+            enforce_stationarity=False,
+            enforce_invertibility=False
+        )
+
+        fit = model_sarima.fit(disp=False)
+
+        # =============================
+        # TOTAL FORECAST
+        # =============================
+        total_step = len(pred_actual) + extra_step
+        forecast = fit.forecast(steps=total_step)
+
+        # =============================
+        # EVALUASI HANYA BAGIAN YANG ADA AKTUAL
+        # =============================
+        forecast_eval = forecast[:len(pred_actual)]
+
+        mask = pred_actual != 0
+
+        if np.sum(mask) == 0:
+            return jsonify({
+                "success": False,
+                "message": "Data aktual tidak valid"
+            })
+
+        mape = np.mean(
+            np.abs((pred_actual[mask] - forecast_eval[mask]) / pred_actual[mask])
+        ) * 100
+
+        rmse = np.sqrt(
+            mean_squared_error(pred_actual, forecast_eval)
+        )
+
+        return jsonify({
+            "success": True,
+            "forecast": forecast.tolist(),
+            "actual": pred_actual.tolist(),
+            "eval_length": len(pred_actual),
+            "MAPE": round(float(mape), 2),
+            "RMSE": round(float(rmse), 2)
+        })
+
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "message": str(e)
+        })
+
+
+
+
 if __name__ == "__main__":
     # app.run(debug=True)
-    port = int(os.environ.get("PORT", 10000))      # Untuk Hosting
-    app.run(host="0.0.0.0", port=port)             # Untuk Hosting
+    # port = int(os.environ.get("PORT", 10000))      # Untuk Hosting
+    # app.run(host="0.0.0.0", port=port)             # Untuk Hosting
+    app.run(debug=True)
