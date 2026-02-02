@@ -164,7 +164,7 @@
 
 <!-- HERO SECTION -->
 <div class="page-hero text-center">
-    <h2>Sistem Prediksi Harga Cabe Rawit Merah</h2>
+    <h2>Sistem Prediksi Harga Komoditas Cabe Rawit Merah <br>di Kota Bandung</h2>
     <p>
         <!-- Sistem ini digunakan untuk menganalisis dan memprediksi 
         <span class="highlight-text">harga Cabe Rawit Merah di Kota Bandung</span> 
@@ -188,7 +188,7 @@ di Kota Bandung berdasarkan data historis guna memperoleh estimasi harga periode
                 <div class="card-body p-4">
 
                     <h5 class="mb-4 fw-semibold">
-                        Alur Sistem
+                        Tahapan
                     </h5>
 
                     <!-- STEP INFO -->
@@ -1084,7 +1084,7 @@ let summaryHtml = `
              class="accordion-collapse collapse show">
             <div class="accordion-body">
 
-                <div class="row mt-1 mx-1 py-3" style="background-color:#fbfbfb;">
+                <div class="row mt-1 mx-1 py-3" style="background-color:#fff;">
                     
                     <!-- LEFT SIDE -->
                     <div class="col-12 col-lg-6">
@@ -1128,7 +1128,7 @@ let summaryHtml = `
                                 <div class="mt-4"
                                     style="font-size:18px; color:#6c757d;">
                                     Model:
-                                    <span style="font-weight:   ; color:#00849B;">
+                                    <span style="font-weight: bold  ; color:#00849B;">
                                         SARIMA (${bestTrainModel.order.join(",")})
                                         (${bestTrainModel.seasonal.join(",")})
                                     </span>
@@ -1141,7 +1141,7 @@ let summaryHtml = `
 
                     <!-- RIGHT SIDE -->
                     <div class="col-12 col-lg-6">
-                        <div class="card border-0 shadow-none rounded-1"
+                        <div class="card border-0 shadow-none rounded-1 "
                             style="border-radius:16px;">
                             <div class="card-body" style="background-color:#fbfbfb;">
 
@@ -1173,14 +1173,15 @@ let summaryHtml = `
                                                 style="background:#fff; border-radius:12px;">
                                                 
                                                 <div style="font-size:13px; font-weight:500; margin-bottom:6px;">
-                                                    Interpretasi Kesalahan Prediksi
+                                                    Rata-rata Kesalahan Prediksi
                                                 </div>
 
                                                 <div style="font-size:13px; line-height:1.6;">
-                                                    ≤ 10%  → Sangat Baik <br>
-                                                    10% – 20% → Baik <br>
-                                                    > 20%  → Perlu Evaluasi
+                                                    • ≤ 10%  → Rata-rata kesalahan rendah <br>
+                                                    • 10% – 20% → Rata-rata kesalahan sedang <br>
+                                                    • > 20%  → Rata-rata kesalahan tinggi
                                                 </div>
+
 
                                             </div>
                                         </div>
@@ -1243,7 +1244,7 @@ let summaryHtml = `
                                                 <div style="font-size:13px; line-height:1.6;">
                                                     Rata-rata selisih prediksi terhadap nilai aktual sekitar <br>
                                                     <strong>Rp ${bestTrainModel.RMSE}</strong><br>
-                                                    Semakin kecil → prediksi semakin mendekati data asli.
+                                                    Semakin kecil → prediksi semakin mendekati data Aktual.
                                                 </div>
                                             </div>
                                         </div>
@@ -1277,12 +1278,13 @@ let summaryHtml = `
                                                                             
 
                                                 <div style="font-size:13px; line-height:1.7; color:#495057;">
-                                                    Nilai apakah model masih menyisakan pola kesalahan.
+                                                    Menguji apakah model sudah menangkap seluruh pola pada data.
                                                     <br>
-                                                    • Jika nilai di atas 0.05 → model sudah stabil dan layak digunakan.
+                                                    • p-value > 0.05 → pola sudah tertangkap dengan baik.
                                                     <br>
-                                                    • Jika nilai 0.05 atau kurang → model masih perlu perbaikan.
+                                                    • p-value ≤ 0.05 → masih ada pola yang belum tertangkap.
                                                 </div>
+
 
                                             </div>
                                         </div>
@@ -1298,7 +1300,7 @@ let summaryHtml = `
                     </div>
 
                 </div>
-
+                <hr>
                 <!-- TRAIN SECTION -->
                 <div class="row mb-5 mt-3 px-4">
                     <div class="col-md-8">
@@ -1423,8 +1425,18 @@ if(bestTrainModel){
             },
             options:{
                 responsive:true,
-                animation:false
+                animation:false,
+                scales: {
+                    y: {
+                        ticks: {
+                            callback: function(value) {
+                                return value.toLocaleString("id-ID");
+                            }
+                        }
+                    }
+                }
             }
+
         }
     );
 }
@@ -1452,8 +1464,18 @@ new Chart(
         },
         options:{
             responsive:true,
-            animation:false
+            animation:false,
+            scales: {
+                y: {
+                    ticks: {
+                        callback: function(value) {
+                            return value.toLocaleString("id-ID");
+                        }
+                    }
+                }
+            }
         }
+
     }
 );
 
@@ -1542,6 +1564,12 @@ function hideLoader(){
                 return;
             }
 
+            // === HIDE MODAL ===
+            var modalElement = $('#modalPrediksi')[0];
+            var modalInstance = bootstrap.Modal.getOrCreateInstance(modalElement);
+            modalInstance.hide();
+
+
             let forecast = res.forecast;
             let actual = res.actual;
 
@@ -1575,9 +1603,9 @@ function hideLoader(){
                 tableRows += `
                     <tr>
                         <td>${label}</td>
-                        <td>${actualVal !== null ? formatRupiah(actualVal) : "-"}</td>
-                        <td>${forecastVal !== undefined ? formatRupiah(forecastVal) : "-"}</td>
-                        <td>
+                        <td class="col-aktual">${actualVal !== null ? formatRupiah(actualVal) : "-"}</td>
+                        <td class="col-forecast">${forecastVal !== undefined ? formatRupiah(forecastVal) : "-"}</td>
+                        <td class="col-error">
                             ${(actualVal !== null && forecastVal !== undefined)
                                 ? formatRupiah(actualVal - forecastVal)
                                 : "-"}
@@ -1588,8 +1616,8 @@ function hideLoader(){
 
             // ===== RENDER ACCORDION =====
             $("#hasilDynamicForward").html(`
-
-                <div class="accordion mb-4 mt-5 mx-3" id="accordionDynamicPrediksi">
+            <div class="container">
+                <div class="accordion mb-4 mt-5 " id="accordionDynamicPrediksi">
                     <div class="accordion-item">
                         <h2 class="accordion-header">
                             <button class="accordion-button"
@@ -1633,9 +1661,10 @@ function hideLoader(){
                                             <thead class="table-light">
                                                 <tr>
                                                     <th>Periode</th>
-                                                    <th>Aktual</th>
-                                                    <th>Forecast</th>
-                                                    <th>Error</th>
+                                                    <th class="col-aktual">Aktual</th>
+                                                    <th class="col-forecast">Forecast</th>
+                                                    <th class="col-error">Error</th>
+
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -1655,6 +1684,7 @@ function hideLoader(){
                         </div>
                     </div>
                 </div>
+            </div>    
             `);
 
             // ===== DESTROY CHART LAMA =====
@@ -1684,8 +1714,51 @@ function hideLoader(){
                     },
                     options:{
                         responsive:true,
-                        animation:false
+                        animation:false,
+                        plugins:{
+                            legend:{
+                                onClick: function(e, legendItem, legend){
+
+                                    const chart = legend.chart;
+                                    const index = legendItem.datasetIndex;
+
+                                    // === TOGGLE DATASET YANG BENAR ===
+                                    const meta = chart.getDatasetMeta(index);
+                                    meta.hidden = meta.hidden === null
+                                        ? !chart.data.datasets[index].hidden
+                                        : null;
+
+                                    chart.update();
+
+                                    // === CEK VISIBILITY ===
+                                    const aktualVisible = chart.isDatasetVisible(0);
+                                    const forecastVisible = chart.isDatasetVisible(1);
+
+                                    $('.col-aktual').toggleClass('d-none', !aktualVisible);
+                                    $('.col-forecast').toggleClass('d-none', !forecastVisible);
+
+                                    // ERROR hanya muncul jika keduanya tampil
+                                    if(aktualVisible && forecastVisible){
+                                        $('.col-error').removeClass('d-none');
+                                    } else {
+                                        $('.col-error').addClass('d-none');
+                                    }
+                                }
+                            }
+                        },
+
+                        scales:{
+                            y:{
+                                ticks:{
+                                    callback:function(value){
+                                        return value.toLocaleString("id-ID");
+                                    }
+                                }
+                            }
+                        }
                     }
+
+
                 }
             );
 

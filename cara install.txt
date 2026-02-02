@@ -27,6 +27,10 @@ pip freeze > requirements.txt
 # INI di AMAZON
 cd ~/flaskapp/analisis-dan-prediksi-harga-pangan-cabe-rawit-merah
 source venv/bin/activate
+
+# Kill dulu
+pkill gunicorn
+# Run
 gunicorn --bind 127.0.0.1:8000 app:app
 
 
