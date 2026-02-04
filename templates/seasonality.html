@@ -135,7 +135,12 @@
 
 </style>
 
+<style>
+    .accordion-button::after {
+    filter: invert(1); /* jadi putih */
+}
 
+</style>
 
 
 
@@ -378,14 +383,14 @@ di Kota Bandung berdasarkan data historis guna memperoleh estimasi harga periode
             </div>
             <div class="modal-body  ">
                 <label class="form-label">Jumlah Periode Tambahan</label>
-                <input type="number" id="inputExtraStep" class="form-control" min="0" value="0">
+                <input type="number" id="inputExtraStep" class="form-control"  min="0" value="0" >
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary"
                         data-bs-dismiss="modal">
                     Batal
                 </button>
-                <button class="btn text-white"
+                <button id="btn-runForward" class="btn text-white"
                         onclick="runDynamicForward()"
                         style="background-color: #0093AD;">
                     Prediksi
@@ -520,7 +525,15 @@ $("#btnSplit").click(function(){
             runSarimaGrid();
         },
         error(){
+            
+            $("#btnSplit").prop("disabled", false).text("Jalankan");
+            $("#hasilSarima").html(
+                `<div class="alert alert-danger">
+                    Server Down, Coba Ulangi Beberapa Saat Lagi.
+                </div>`
+            );
             hideLoader();
+            
         }
     });
 
@@ -610,7 +623,7 @@ function runSarimaGrid() {
 
 
             if(filteredModels.length === 0){
-                $("#btnSplit").prop("disabled", false).text("Submit");
+                $("#btnSplit").prop("disabled", false).text("Jalankan");
                 hideLoader();
                 $("#hasilSarima").html(
                     `<div class="alert alert-warning">
@@ -803,16 +816,44 @@ function runSarimaGrid() {
             runDynamicForward();
 
         },
-        error: function(){
+        error: function(e){
             $("#btnSarima").prop("disabled", false)
-                           .text("Jalankan SARIMA Grid");
+                           .text("Jalankan");
 
             $("#hasilSarima").html(
                 `<div class="alert alert-danger">
-                    Terjadi error saat menjalankan SARIMA
+                    Server Down, Coba Ulangi Beberapa Saat Lagi.
                 </div>`
             );
+
+            $("#btnSplit").prop("disabled", false).text("Jalankan");
+            hideLoader();            
         }
+
+        // error: function(xhr, status, error) {
+        //     $("#btnSarima").prop("disabled", false)
+        //                 .text("Jalankan SARIMA Grid");
+
+        //     let errorMessage = "";
+
+        //     if (xhr.responseJSON && xhr.responseJSON.message) {
+        //         errorMessage = xhr.responseJSON.message;
+        //     } else if (xhr.responseText) {
+        //         errorMessage = xhr.responseText;
+        //     } else if (error) {
+        //         errorMessage = error;
+        //     }
+
+        //     $("#hasilSarima").html(
+        //         `<div class="alert alert-danger">
+        //             ${errorMessage}
+        //         </div>`
+        //     );
+
+        //     $("#btnSplit").prop("disabled", false).text("Jalankan");
+        //     hideLoader();
+        // }
+
     });
 
     
@@ -843,7 +884,7 @@ function btnForwardPred(){
         }),
         success: function(res){
 
-            $("#btnSplit").prop("disabled", false).text("Submit");
+            $("#btnSplit").prop("disabled", false).text("Jalankan");
             hideLoader();
 
             $("#btnForwardPred")
@@ -1087,11 +1128,11 @@ let summaryHtml = `
                 <div class="row mt-1 mx-1 py-3" style="background-color:#fff;">
                     
                     <!-- LEFT SIDE -->
-                    <div class="col-12 col-lg-6">
+                    <div class="col-12 col-lg-5">
 
                         <div class="card border-0 shadow-none rounded-1"
                             style="border-radius:10px;">
-                            <div class="card-body" style="background-color:#fbfbfb;">
+                            <div class="card-body rounded-3" style="background-color:#fbfbfb;">
 
                                 <h5 class="mb-4" style="font-weight:600;">
                                     Parameter Model SARIMA Terpilih
@@ -1140,10 +1181,10 @@ let summaryHtml = `
                     </div>
 
                     <!-- RIGHT SIDE -->
-                    <div class="col-12 col-lg-6">
+                    <div class="col-12 col-lg-7">
                         <div class="card border-0 shadow-none rounded-1 "
                             style="border-radius:16px;">
-                            <div class="card-body" style="background-color:#fbfbfb;">
+                            <div class="card-body rounded-3" style="background-color:#fbfbfb;">
 
                                 <h5 class="mb-4" style="font-weight:600;">
                                     Hasil Pengujian Model
@@ -1309,7 +1350,7 @@ let summaryHtml = `
                     </div>
 
                     <div class="col-md-4">
-                        <h5 class="mt-5">Table Harga (Model Train vs Aktual)</h5>
+                        <h5 class="mt-5">Table Detail (Model Train vs Aktual)</h5>
                         <table class="table mt-3">
                             <thead class="table-light">
                                 <tr>
@@ -1502,6 +1543,12 @@ new Chart(
                     Terjadi error saat forward
                 </div>
             `);
+
+            $("#btnSplit").prop("disabled", false).text("Jalankan");
+            hideLoader();
+            $("#inputExtraStep").val(0);
+            $("#btn-runForward").prop("disabled", false).text("Prediksi");
+            
         }
     });
 
@@ -1542,6 +1589,10 @@ function hideLoader(){
         return;
     }
 
+    $("#btn-runForward")
+        .prop("disabled", true)
+        .html(`<span class="spinner-border spinner-border-sm me-2"></span>Memproses...`);
+
     const extraStep = Number($("#inputExtraStep").val());
 
     $.ajax({
@@ -1554,21 +1605,27 @@ function hideLoader(){
         }),
         success: function(res){
 
-            $("#btnSplit").prop("disabled", false).text("Submit");
+            $("#btnSplit").prop("disabled", false).text("Jalankan");
             hideLoader();
 
-            if(!res.success){
-                $("#hasilDynamicForward").html(
-                    `<div class="alert alert-danger">${res.message}</div>`
-                );
-                return;
-            }
+            $("#btn-runForward").prop("disabled", false).text("Prediksi");
 
             // === HIDE MODAL ===
             var modalElement = $('#modalPrediksi')[0];
             var modalInstance = bootstrap.Modal.getOrCreateInstance(modalElement);
             modalInstance.hide();
 
+            if(!res.success){
+                $("#hasilDynamicForward").html(`<div class="alert alert-danger">${res.message}</div>`);
+
+                $("#inputExtraStep").val(0);
+                modalInstance.hide();
+
+                return;
+            }
+
+            // Hide Modal
+            modalInstance.hide();
 
             let forecast = res.forecast;
             let actual = res.actual;
@@ -1764,8 +1821,10 @@ function hideLoader(){
 
         },
         error(){
-            $("#btnSplit").prop("disabled", false).text("Submit");
+            $("#btnSplit").prop("disabled", false).text("Jalankan");
             hideLoader();
+            $("#inputExtraStep").val(0);
+            $("#btn-runForward").prop("disabled", false).text("Prediksi");
         }
     });
 }

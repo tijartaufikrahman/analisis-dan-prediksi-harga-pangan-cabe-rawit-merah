@@ -139,25 +139,12 @@ def split_data_auto():
         # ===============================
 
         total_data = len(df_bulanan)
-        if total_data == 56:
-            # test_n = 8
-            # pred_n = 4
-            
-            # Oke juga 
-            # test_n = 5
-            # pred_n = 4
-
+        if total_data == 42:        
             test_n = 6
-            pred_n = 5
-        elif  total_data == 52:
-            test_n = 10
-            pred_n = 2           
-        else :
-            # pred_n = 2
-            # test_n = 6
-
+            pred_n = 2               
+        else :            
+            test_n = 6
             pred_n = 3
-            test_n = 6
         
         
 
@@ -333,9 +320,9 @@ def sarima_grid():
     # D_vals = range(0, 2)
     # Q_vals = range(0, 2)
 
-    p_vals = range(0, 2)
+    p_vals = range(0, 4)
     d_vals = range(0, 1)
-    q_vals = range(0, 2)
+    q_vals = range(0, 3)
     P_vals = range(0, 2)
     D_vals = range(0, 2)
     Q_vals = range(0, 2)
@@ -911,7 +898,7 @@ def sarima_forward_dynamic():
 
 
 if __name__ == "__main__":
-    # app.run(debug=True)
-    port = int(os.environ.get("PORT", 10000))      # Untuk Hosting
-    app.run(host="0.0.0.0", port=port)             # Untuk Hosting
+    app.run(debug=True)
+    # port = int(os.environ.get("PORT", 10000))      # Untuk Hosting
+    # app.run(host="0.0.0.0", port=port)             # Untuk Hosting
     
