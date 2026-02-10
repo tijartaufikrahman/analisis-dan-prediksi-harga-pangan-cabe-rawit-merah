@@ -15,15 +15,15 @@ from itertools import product
 # Baru 
 from sklearn.metrics import r2_score
 
-# File Berbeda
-from modules.history import history_bp
+# # File Berbeda
+# from modules.history import history_bp
 
 
 
 app = Flask(__name__)
 
-# File Berbeda 
-app.register_blueprint(history_bp)
+# # File Berbeda 
+# app.register_blueprint(history_bp)
 
 
 DATA_FOLDER = "data"
@@ -46,9 +46,9 @@ GLOBAL_STL_RESULTS = None
 def home():
     return render_template("seasonality.html")
 
-@app.route("/history")
-def history():
-    return render_template("data-history.html")
+# @app.route("/history")
+# def history():
+#     return render_template("data-history.html")
 
 # =========================
 # GET LIST FILE CSV
