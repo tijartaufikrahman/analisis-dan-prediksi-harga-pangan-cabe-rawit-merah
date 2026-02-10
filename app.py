@@ -15,8 +15,16 @@ from itertools import product
 # Baru 
 from sklearn.metrics import r2_score
 
+# File Berbeda
+from modules.history import history_bp
+
+
 
 app = Flask(__name__)
+
+# File Berbeda 
+app.register_blueprint(history_bp)
+
 
 DATA_FOLDER = "data"
 
@@ -38,6 +46,9 @@ GLOBAL_STL_RESULTS = None
 def home():
     return render_template("seasonality.html")
 
+@app.route("/history")
+def history():
+    return render_template("data-history.html")
 
 # =========================
 # GET LIST FILE CSV
@@ -313,19 +324,28 @@ def sarima_grid():
     s = GLOBAL_BEST_S
     n_forecast = len(actual_future)
 
-    # p_vals = range(0, 3)
-    # d_vals = range(0, 2)
+    p_vals = range(0, 3)
+    d_vals = range(0, 2)
+    q_vals = range(0, 3)
+    P_vals = range(0, 2)
+    D_vals = range(0, 2)
+    Q_vals = range(0, 2)
+
+    # Besi 6.3mm dan Cabe 
+    # p_vals = range(0, 4)
+    # d_vals = range(0, 1)
     # q_vals = range(0, 3)
     # P_vals = range(0, 2)
     # D_vals = range(0, 2)
     # Q_vals = range(0, 2)
 
-    p_vals = range(0, 4)
-    d_vals = range(0, 1)
-    q_vals = range(0, 3)
-    P_vals = range(0, 2)
-    D_vals = range(0, 2)
-    Q_vals = range(0, 2)
+    # Besi All dan Cabe 
+    # p_vals = range(0, 5)
+    # d_vals = range(0, 1)
+    # q_vals = range(0, 4)
+    # P_vals = range(0, 2)
+    # D_vals = range(0, 2)
+    # Q_vals = range(0, 2)
 
     param_grid = list(product(
         p_vals, d_vals, q_vals,
@@ -898,7 +918,7 @@ def sarima_forward_dynamic():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
-    # port = int(os.environ.get("PORT", 10000))      # Untuk Hosting
-    # app.run(host="0.0.0.0", port=port)             # Untuk Hosting
+    # app.run(debug=True)
+    port = int(os.environ.get("PORT", 10000))      # Untuk Hosting
+    app.run(host="0.0.0.0", port=port)             # Untuk Hosting
     

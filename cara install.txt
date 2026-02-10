@@ -21,9 +21,6 @@ pip freeze > requirements.txt
 
 
 
-
-
-
 # INI di AMAZON
 cd ~/flaskapp/analisis-dan-prediksi-harga-pangan-cabe-rawit-merah
 source venv/bin/activate
